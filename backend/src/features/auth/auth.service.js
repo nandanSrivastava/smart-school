@@ -3,7 +3,7 @@ const bcrypt = require('bcryptjs');
 const { JWT_SECRET } = require('../../config/env');
 const User = require('./user.model');
 
-exports.registerUser = async (email, password, role) => {
+exports.registerUser = async (email, password, role, name) => {
     const existingUser = await User.findOne({ email });
     if (existingUser) {
         throw new Error('User already exists');
@@ -11,6 +11,7 @@ exports.registerUser = async (email, password, role) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = await User.create({
+        name,
         email,
         password: hashedPassword,
         role: role || 'student',
